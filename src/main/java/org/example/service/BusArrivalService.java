@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class BusArrivalService {
@@ -31,10 +32,10 @@ public class BusArrivalService {
 
         List<Route> routes = parser.parseRoutes(gtfsDirectory.resolve("routes.txt"));
         List<Stop> stops = parser.parseStops(gtfsDirectory.resolve("stops.txt"));
-        List<Trip> trips = parser.parseTrips(gtfsDirectory.resolve("trips.txt"));
-        List<StopTimeEntry> stopTimeEntries = parser.parseStopTimeEntries(gtfsDirectory.resolve("stop_times.txt"));
 
-        //pomoč AI
+        List<StopTimeEntry> stopTimeEntries = parser.parseStopTimeEntries(
+                gtfsDirectory.resolve("stop_times.txt"), id -> id.equals(stopId));
+
         Optional<Stop> stopOpt = stops.stream()
                 .filter(s -> s.id().equals(stopId))
                 .findFirst();
@@ -44,18 +45,21 @@ public class BusArrivalService {
         }
         Stop stop = stopOpt.get();
 
+        Set<String> neededTripIds = stopTimeEntries.stream()
+                .map(StopTimeEntry::tripId)
+                .collect(Collectors.toSet());
+
+        List<Trip> trips = parser.parseTrips(
+                gtfsDirectory.resolve("trips.txt"), neededTripIds::contains);
+
         Map<String, Trip> tripsById = trips.stream()
                 .collect(Collectors.toMap(Trip::id, t -> t, (existing, duplicate) -> existing));
 
         Map<String, Route> routesById = routes.stream()
-                .collect(Collectors.toMap(Route::id, r -> r,  (existing, duplicate) -> existing));
-
-        List<StopTimeEntry> atThisStop = stopTimeEntries.stream()
-                .filter(e -> e.stopId().equals(stopId))
-                .toList();
+                .collect(Collectors.toMap(Route::id, r -> r, (existing, duplicate) -> existing));
 
         List<StopTimeEntry> withinWindow = new ArrivalTimeFilter()
-                .filterWithinWindow(atThisStop, now, window);
+                .filterWithinWindow(stopTimeEntries, now, window);
 
         List<Arrival> arrivals = withinWindow.stream()
                 .map(entry -> toArrival(entry, tripsById, routesById))
@@ -68,7 +72,6 @@ public class BusArrivalService {
         List<String> output = new ArrayList<>();
         output.add("Postajališče: " + stop.name());
 
-        //Pomoč AI
         for (Map.Entry<String, List<Arrival>> group : grouped.entrySet()) {
             String times = group.getValue().stream()
                     .map(a -> "absolute".equals(format)

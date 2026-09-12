@@ -45,8 +45,8 @@ class GtfsParserTest {
         List<Trip> trips = parser.parseTrips(file);
 
         assertEquals(4, trips.size());
-        assertEquals("NORMAL_03_101_Return_22:10", trips.get(0).routeid());
-        assertEquals("101", trips.get(0).id());
+        assertEquals("NORMAL_03_101_Return_22:10", trips.get(0).id());
+        assertEquals("101", trips.get(0).routeid());
     }
 
     @Test

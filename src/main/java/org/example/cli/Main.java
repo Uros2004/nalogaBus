@@ -27,7 +27,6 @@ public class Main {
             return;
         }
 
-        //Pomoč AI
         String format = args[2];
         if (!format.equals("relative") && !format.equals("absolute")) {
             System.err.println("Tretji argument mora biti 'relative' ali 'absolute', dobil sem: " + format);
@@ -42,7 +41,6 @@ public class Main {
         GtfsParser parser = new GtfsParser();
         BusArrivalService service = new BusArrivalService(parser, gtfsDirectory);
 
-        //Pomoč AI
         List<String> result;
         try {
             result = service.getUpcomingArrivals(stopId, maxPerRoute, format, now, window);
