@@ -68,9 +68,8 @@ Vsebuje unit teste (parser, filter, grouper, formatter) in integracijski test
 
 ## Uporaba AI orodij
 
-Pri izdelavi naloge sem uporabil AI (Claude) kot mentorja za razlago konceptov in
-pregled kode. Konkretno je AI napisal:
-- `BusArrivalService.java` in `Main.java` v celoti
+Pri izdelavi naloge sem uporabil AI (Claude). Konkretno je AI napisal:
+- `BusArrivalService.java` in `Main.java`
 - `parseGtfsTime()` helper metodo v `GtfsParser`
 
 Preostalo kodo (modeli, `GtfsParser` branje, `ArrivalTimeFilter`, `ArrivalGrouper`,
