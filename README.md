@@ -73,4 +73,4 @@ Pri izdelavi naloge sem uporabil AI (Claude). Konkretno je AI napisal:
 - `parseGtfsTime()` helper metodo v `GtfsParser`
 
 Preostalo kodo (modeli, `GtfsParser` branje, `ArrivalTimeFilter`, `ArrivalGrouper`,
-`ArrivalFormatter`, teste) sem pisal sam, ob razlagah in usmeritvah AI.
+`ArrivalFormatter`, teste) sem pisal sam.
